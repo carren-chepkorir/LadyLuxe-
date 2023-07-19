@@ -1,0 +1,79 @@
+﻿
+<aside class="main-sidebar" style="background-color:white;color:white;box-shadow: 1px 6px 22px 3px rgba(0,0,0,0.1);">
+
+ 
+    <section class="sidebar" style="height: auto;">
+
+        <ul class="sidebar-menu treeview" data-widget="tree">
+
+            <li class="treeview" style="height: auto;color:black">
+                <a asp-action="HomePage" asp-controller="Home">
+                    <i style="color:black" class="fal fa-tachometer-alt-slowest"></i>
+                    <span style="color:black">
+                        <b>Dashboard</b>
+
+                    </span>
+                </a>
+            
+            </li>
+                <li class="treeview" style="height: auto;color:black">
+                    <a href="#">
+                    <i style="color:black" class="fa fa-tasks" aria-hidden="true"></i>
+
+
+                        <span style="color:black">Orders </span>
+                        <span class="pull-right-container">
+                            <i style="color:black" class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li>
+                            <a asp-action="" asp-controller="" asp-route-Id="">
+                                <i class="fa fa-eye" aria-hidden="true"></i>Manage Orders
+                            </a>
+                        </li>
+
+                    </ul>
+                </li> <li class="treeview" style="height: auto;color:black">
+                    <a href="#">
+                    <i style="color:black" class="fa fa-tasks" aria-hidden="true"></i>
+
+
+                        <span style="color:black">Categories </span>
+                        <span class="pull-right-container">
+                            <i style="color:black" class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li>
+                        <a asp-action="Index" asp-controller="Categories" >
+                                <i class="fa fa-eye" aria-hidden="true"></i>Manage Categories
+                            </a>
+                        </li>
+
+                    </ul>
+                </li><li class="treeview" style="height: auto;color:black">
+                    <a href="#">
+                    <i style="color:black" class="fa fa-tasks" aria-hidden="true"></i>
+
+
+                        <span style="color:black">Products </span>
+                        <span class="pull-right-container">
+                            <i style="color:black" class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li>
+                        <a asp-action="Index" asp-controller="Products" >
+                                <i class="fa fa-eye" aria-hidden="true"></i>Manage Manage Products
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+
+<script src="~/dist/js/adminlte.min.js"></script>

@@ -1,0 +1,212 @@
+﻿@model IEnumerable<LadyLuxe.Models.Domain.Category>
+
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+
+
+<div class="container-fluid">
+
+
+    <div style="text-align:center">
+        <div style="font-size:large">
+            All Categories
+        </div>
+        <div style="font-size:small;color:gray">
+            List of all Categories
+        </div>
+    </div>
+
+    <div style="margin:2px;background-color:white;overflow:auto;margin-bottom:24px;margin-top:16px; box-shadow: 8px 8px 17px #f2f2f2, -8px -8px 17px #ffffff;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <partial name="_Search" />
+                </div>
+                <div class="col-12 col-md-4" style="margin-top:8px;text-align:center">
+                    <a asp-action="" data-toggle="modal" data-target="#Create" style="">
+                        <div class=" btn-sm btn-dark" style="background-color:black;color:white;padding:8px;margin:8px;text-align:center;border-radius:8px">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            <span>
+                                Add New Categories
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (TempData["Error"]==null){}else{
+    <div class="alert alert-danger">
+        <strong>Opps!..</strong>@TempData["Error"]
+    </div>
+    } @if (TempData["Success"]==null){}else{
+        <div class="alert alert-success alert-dismissible">
+            <strong>Success!..</strong>@TempData["Success"]
+    </div>
+    }
+
+    <table class="table table-responsive-sm  table-striped table-bordered  table-sm" style="color:black">
+        <thead style="background-color:#0f1230;color:white">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Icon)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryName)
+                </th>
+
+
+                <th colspan="3" style="text-align:center">Actions</th>
+            </tr>
+        </thead>
+      
+            <tbody id="myUL">
+                  @if (Model.Count() != 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Icon)
+                        </td>
+
+                        <td>
+                            <b> @Html.DisplayFor(modelItem => item.CategoryName)</b>
+                        </td>
+                        <td>
+                            <a asp-action="Create" asp-controller="Sub_Category" asp-route-id="@item.Id">Sub-Categories</a> 
+                        </td>
+                        <td>
+                        <td>
+                            <a asp-action="" data-toggle="modal" data-target="#Edit_@item.Id" style="color:blue" asp-route-id=""><i class="fa fa-pencil" aria-hidden="true"></i> <span>Edit</span> </a>
+                        </td>
+
+                        <td>
+                            <a asp-action="" data-toggle="modal" data-target="#Delete_@item.Id" style="color:red" asp-route-id=""><i class="fa fa-trash" aria-hidden="true"></i> <span>Remove</span> </a>
+                        </td>
+                    </tr>
+                    <div id="Delete_@item.Id" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div style="font-size:large;font-weight:bold" class="modal-title text-danger">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Remove Category
+                                    </div>
+
+                                </div>
+                                <div class="modal-body">
+                                    <div style="font-size:large;font-weight:bold;text-align:center" class="modal-title">@item.CategoryName</div>
+
+                                    <div class="alert alert-danger">Hey you are about to remove this Category from the system.Are you sure you want to continue??</div>
+                                </div>
+                                <form asp-action="Delete">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <div class="modal-footer">
+                                        <div class=" btn-success btn-sm" data-dismiss="modal">Cancel</div>
+                                        <input type="submit" id="completebutton" value="REMOVE CATEGORY " class=" btn-danger btn-sm" />
+
+                                    </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div> 
+                    <div id="Edit_@item.Id" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div style="font-size:large;font-weight:bold" class="modal-title text-Primary">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i> Edit Category
+                                    </div>
+
+                                </div>
+                                <form asp-action="Edit" asp-controller="Categories">
+                                    <input type="hidden" value="@item.Id" name="Id">
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            Category name
+                                            <input name="CategoryName"value="@item.CategoryName" required class="form-control" />
+
+                                        </div>
+                                        <div class="form-group">
+                                            Icon
+                                            <input name="Icon" required value="@item.Icon" class="form-control" />
+                                        </div>
+                                        <div hidden class="form-group  hide">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" name="DeletedStatus" /> @Html.DisplayNameFor(model => model.DeletedStatus)
+                                            </label>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class=" btn-danger btn-sm" data-dismiss="modal">Cancel</div>
+                                            <input type="submit" id="completebutton" value=" Edit Category " class=" btn-success btn-sm" />
+
+                                        </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" style="color:red;text-align:center">
+                        Categories not Found 
+                    </td>
+                </tr>
+            }
+        </tbody>
+   
+    </table>
+
+</div>
+
+
+<div id="Create" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <div style="font-size:large;font-weight:bold" class="modal-title text-success">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add new Category
+                </div>
+
+            </div>   <form asp-action="Create" asp-controller="Categories">
+            <div class="modal-body">
+                <div class="form-group">
+                    Category name
+                    <input name="CategoryName"required class="form-control" />
+                 
+                </div>
+                <div class="form-group">
+                 Icon
+                    <input name="Icon"required class="form-control" />
+                </div>
+                <div hidden class="form-group form-check hide">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="DeletedStatus" /> @Html.DisplayNameFor(model => model.DeletedStatus)
+                    </label>
+                </div>
+           <div class="modal-footer">
+                    <div class=" btn-danger btn-sm" data-dismiss="modal">Cancel</div>
+                    <input type="submit" id="completebutton" value="Add new Category " class=" btn-success btn-sm" />
+
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

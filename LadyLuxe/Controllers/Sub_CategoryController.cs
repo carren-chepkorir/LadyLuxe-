@@ -19,6 +19,8 @@ namespace LadyLuxe.Controllers
         {
             _context = context;
         }
+        //Customer page
+       
 
         // GET: Sub_Category
         public async Task<IActionResult> Index()

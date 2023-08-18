@@ -14,7 +14,7 @@
         ul = document.getElementById("myUL");
         li = ul.getElementsByTagName("tr");
         for (i = 0; i < li.length; i++) {
-            a = li[i].getElementsByTagName("b")[0];
+            a = li[i].getElementsByTagNamerun("b")[0];
            
             txtValue = a.textContent || a.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {

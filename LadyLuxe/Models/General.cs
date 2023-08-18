@@ -8,8 +8,9 @@ namespace LadyLuxe.Models
         public List<Category> categories { get; set; }
         public List<Sub_Category> sub_Categories { get; set; }
         public List<Product> products { get; set; }
-        public List<Cart> carts { get; set; }//pole sikua nim
+        public List<Cart> carts { get; set; }
 
-        //so this class tutatumia all through..
+       
     }
 }
+//A general model to be used across .

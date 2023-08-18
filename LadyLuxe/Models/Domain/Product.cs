@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LadyLuxe.Models.Domain
 {
@@ -19,9 +21,14 @@ namespace LadyLuxe.Models.Domain
         [Required]
         public double PreviousPrice { get; set; }
         [Required]
+        [DisplayName("Qty")]
         public int Quality { get; set; }
-        public string Image { get; set; }
-    
+        public string Image { get; set; } //hii itabebat tu image URL...
        
+        [NotMapped]
+        [DisplayName("Image")]     
+        public IFormFile ImageFile { get; set; }
+
+//Hatukueka ya deleted status..but ni sawa tu...
     }
 }

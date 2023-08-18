@@ -1,9 +1,16 @@
-﻿@model IEnumerable<LadyLuxe.Models.Domain.Product>
+﻿@model LadyLuxe.Models.Domain.Product
+<link href="~/Syncfussion/styles/material.css" rel="stylesheet" />
+<script src="~/Syncfussion/scripts/ej2.min.js"></script>
 @using Syncfusion.EJ2
+@using Newtonsoft.Json
+
 @{
     Layout = "~/Views/Shared/_Dashboard.cshtml";
 }
 <div class="container-fluid">
+
+
+ 
     <div style="text-align:center">
         <div style="font-size:large">Products</div>
         <div style="font-size:small;color:gray">List of All products</div>
@@ -37,67 +44,43 @@
 
    
     <table class="table table-responsive-sm table-striped table-bordered  table-sm" style="color:black">
-        <thead style="background-color:gray; color:white">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CategoryId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Sub_CategoryId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Price)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PreviousPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Quality)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Image)
-                </th>
-                <th colspan="3" style="text-align:center">Action</th>
-            </tr>
-        </thead>
+
         <tbody id="myUL">
-            @if (Model.Count() !=0) {
-                @foreach (var item in Model)
+            @if (ViewBag.Products.Count !=0) {
+                @foreach (var item in ViewBag.Products)
                 {
+
                     <tr>
-                        <td>
-                            <b>   @Html.DisplayFor(modelItem => item.ProductName)</b>
+                   
+                        <td style="align-content:center;text-align:center;width:150px">
+                            <a asp-action="Details" asp-controller="Products" asp-route-Id="@item.Id">
+                            <img src="@item.Image" class="img-fluid" style="height:120px;border-radius:8px"> 
+                            </a>
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CategoryId)
+                     
+                        <td style="max-width:150px">
+                            <b style="font-size:large">   @item.ProductName</b>
+                           <div class="row">
+                                <div class="col" style="font-size:medium">KES  @item.Price.ToString("#,##0.00")</div>
+                                <div class="col" style="color:gray;font-size:small;text-decoration:line-through">KES  @item.PreviousPrice.ToString("#,##0.00") </div>
+                           </div>
+                            <div style="color:gray;font-size:small">@item.Description</div>
+                            <div style="font-size:medium"> @item.Quality Items in Stock</div>
                         </td>
+                     
+                     
+                  
                         <td>
-                            @Html.DisplayFor(modelItem => item.Sub_CategoryId)
+                          <div style="padding:10px">
+                                <a asp-action="" data-target="#Edit_@item.Id" data-toggle="modal" asp-route-id=""><i class="fa fa-pencil" aria-hidden="true"></i><span> Edit</span></a>
+                            </div>
+
+                            <div style="padding:10px;color:red">
+                                <a asp-action="" data-target="#Delete_@item.Id" data-toggle="modal" asp-route-id=""> <i class="fa fa-trash" aria-hidden="true"></i><span > Remove</span></a>
+                        </div>
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PreviousPrice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Quality)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Image)
-                        </td>
-                        <td><a asp-action="" data-target="#Edit_@item.Id" data-toggle="modal"  asp-route-id=""><i class="fa fa-pencil" aria-hidden="true"></i><span>Edit</span></a> |</td>
-                        <td><a asp-action="" data-toggle="modal" asp-route-id="">Details</a> |</td>
-                        <td> <a asp-action="" data-target="#Delete_@item.Id" data-toggle="modal" asp-route-id=""> <i class="fa fa-trash" aria-hidden="true"></i><span>Remove</span></a></td>
+                      
+                       
                         
                     </tr>
                    <div id="Delete_@item.Id" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
@@ -198,55 +181,99 @@
         </tbody>
     </table>
 </div>
-<div id="Create" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+<div id="Create" class="modal fade" role="dialog" >
     <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
+        <!-- Modal content
+            perfect...
+        -->
+        <div class="modal-content ">
             <div class="modal-header">
                 <div style="font-size:large;font-weight:bold" class="modal-title text-Primary">
                     <i class="fa fa-pencil" aria-hidden="true"></i>Add new Product
                 </div>
 
             </div>
-            <form asp-action="Create" asp-controller="Products">
-             
-                <input type="text" name="Sub_CategoryId">
-                <input type="text" name="CategoryId">
-               
+            <form asp-action="Create" method="post" enctype="multipart/form-data" style="padding:12px">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" value="" asp-for="Image" />
+                <div class="form-group">
+                    <label asp-for="ProductName" class="control-label"></label>
+                    <input asp-for="ProductName"Required class="form-control" />
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                <ejs-dropdownlist id="Category" ejs-for="CategoryId" dataSource="@ViewBag.data" change="Categorychange" filterBarPlaceholder="Search" allowFiltering="true" filtering="onfiltering" placeholder="Select a Category">
+                        <e-dropdownlist-fields text="CategoryName" value="Id"></e-dropdownlist-fields>
+                </ejs-dropdownlist></div>
+                <br />
+                <div class="form-group">
+                <ejs-dropdownlist id="Sub_Category" ejs-for="Sub_CategoryId" enabled="false" dataSource="@ViewBag.datasubcategory" filterBarPlaceholder="Search" allowFiltering="true" filtering="onfilteringSubCat" placeholder="Select a sub-category">
+                        <e-dropdownlist-fields text="CategoryName" value="Id"></e-dropdownlist-fields>
+                </ejs-dropdownlist>
+                </div>
+                <script type="text/javascript">
+                    function onfiltering(e) {
+                        var query = new ej.data.Query();
+                        query = (e.text !== '') ? query.where('CategoryName', 'contains', e.text, true) : query;
+                        e.updateData(@Html.Raw(JsonConvert.SerializeObject(@ViewBag.data)), query);
+                    }
+                    function onfilteringSubCat(e) {
+                        var query = new ej.data.Query();
+                        query = (e.text !== '') ? query.where('CategoryName', 'contains', e.text, true) : query;
+                        e.updateData(@Html.Raw(JsonConvert.SerializeObject(@ViewBag.datasubcategory)), query);
+                    }
 
-                <div class="modal-body">
-                    <div class="form-group">
-                        Product name
-                        <input name="ProductName"  required class="form-control" />
+                    function Categorychange() {
+                        // disable the state DropDownList
+                        var Category = document.getElementById('Category').ej2_instances[0];
+                        var Sub_Category = document.getElementById('Sub_Category').ej2_instances[0];
 
-                    </div>
-                    <div class="form-group">
-                        Image
-                        <input name="Image" required class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        Description
-                        <input name="Description" required  class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        Price
-                        <input name="Price" required  class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        Previous Price
-                        <input name="PreviousPrice" required  class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        Quality
-                        <input name="Quality" required  class="form-control" />
-                    </div>
+                        Sub_Category.enabled = true;
+                        //frame the query based on selected value in country DropDownList.
+                        var tempQuery = new ej.data.Query().where('GategoryId', 'equal', Category.value);
+                        // set the framed query based on selected value in country DropDownList.
+                        Sub_Category.query = tempQuery;
+                        // set null value to state DropDownList text property
+                        Sub_Category.text = null;
+                        //  bind the property changes to state DropDownList
+                        Sub_Category.dataBind();
 
-                    <div class="modal-footer">
-                        <div class=" btn-danger btn-sm" data-dismiss="modal">Cancel</div>
-                        <input type="submit" id="completebutton" value=" Add new Product " class=" btn-success btn-sm" />
+                    }
 
-                    </div>
+                </script>
+                <!--
+                    Pretty si i change the theme...kiasi tu.sawa
+                -->
+            
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" Required type="number" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" Required type="text" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PreviousPrice" class="control-label"></label>
+                    <input asp-for="PreviousPrice" Required type="number" class="form-control" />
+                    <span asp-validation-for="PreviousPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Quality" class="control-label"></label>
+                    <input asp-for="Quality" Required type="number" class="form-control" />
+                    <span asp-validation-for="Quality" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Image" class="control-label"></label>
+                    <input asp-for="ImageFile" Required  accept="images/*" class="form-control" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="form-group" >
+                    <input type="submit" value="Upload Product" class="btn btn-info" style="width:100%" />
+                </div>
             </form>
 
         </div>

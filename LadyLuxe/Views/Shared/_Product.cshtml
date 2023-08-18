@@ -1,0 +1,43 @@
+﻿ @model General
+<link href="~/stylesheet.css" rel="stylesheet" />
+ <div class="container-fluid" style="color:black;">
+     <div class="row">
+        @foreach (var item in Model.products)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 content">
+
+                <div onmouseover="FunctionAmouseover('btnAddToCart_@item.Id')" onmouseout="FunctionMouseout('btnAddToCart_@item.Id')" class="product-grid" style="padding:8px;margin:2px;border-radius:8px;color:black;background-color:white">
+                    <div class="product-image">
+                        <img class="pic-1" src="@item.Image">
+                    </div>
+                    
+                   <div style="font-size:large;color:black;font-family:calibri">
+                      @item.ProductName 
+                   </div>
+                   <strong style="font-size:large">KES @item.Price.ToString("#,##0.00")</strong>
+                    <div style="font-size:medium;color:gray"><s>KES @item.PreviousPrice.ToString("#,##0.00")</s></div>
+                    <form asp-action="AddtoCart" asp-controller="Home" asp-route-id="@item.Id">
+                        <button id="btnAddToCart_@item.Id" type="submit" style="background-color:coral;color:white">Add To Cart</button>
+
+                    </form>
+                 
+                </div>                
+            </div>
+          <script>
+                document.getElementById('btnAddToCart_@item.Id').style.display = 'none';
+
+            </script>
+        }
+     </div>
+ </div>
+ <!--Javascript func-->
+
+
+<script>
+    function FunctionAmouseover(id) {
+        document.getElementById(id).style.display = 'block';
+    }
+    function FunctionMouseout(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+</script>

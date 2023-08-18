@@ -7,24 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LadyLuxe.Data;
 using LadyLuxe.Models.Domain;
-
+using Microsoft.AspNetCore.Hosting;/// yako ni iweb host..lemi paste code flani kwanza ikiwork i will explain sawa?okay
 namespace LadyLuxe.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly LadyLuxeDbContext _context;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public ProductsController(LadyLuxeDbContext context)
+        public ProductsController(LadyLuxeDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
-        // GET: Products
+        // GET: Products am lost...nko sure ata hapo kwa file huku understand..okay kenye nafanya hapa..nataka kudisplay data to view na viewbag
+        //juu nikitumia model siwezi upload file...so am tring to change souce iwe viewbag..okay i got that,..but ntaexplain pos..worry no more
         public async Task<IActionResult> Index()
         {
-              return _context.Products != null ? 
-                          View(await _context.Products.ToListAsync()) :
-                          Problem("Entity set 'LadyLuxeDbContext.Products'  is null.");
+            ViewBag.Products = await _context.Products.ToListAsync();
+            ViewBag.data = _context.Category.ToList();
+            ViewBag.datasubcategory = _context.Sub_Categories.ToList();
+            return View();
+                        
         }
 
         // GET: Products/Details/5
@@ -56,24 +61,28 @@ namespace LadyLuxe.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( string ProductName,string CategoryId,string Sub_CategoryId,double Price,string Description,double PreviousPrice,int Quality,string Image)
+        public async Task<IActionResult> Create(Product product)
         {
-            var newinfo = new Product
-            {
-                CategoryId = CategoryId,
-                PreviousPrice = PreviousPrice,
-                Id = Guid.NewGuid(),
-                Price = Price,
-                Description = Description,
-                Quality = Quality,
-                Image = Image,
-                Sub_CategoryId = Sub_CategoryId,
-                  ProductName=ProductName,
+            // string ProductName,string CategoryId,string Sub_CategoryId,double Price,string Description,double PreviousPrice,int Quality
 
-            };
-            _context.Add(newinfo);
+            //Image upload..
+            string wwwRootPath = hostingEnvironment.WebRootPath;
+            string filename = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+            string extension = Path.GetExtension(product.ImageFile.FileName);
+            filename = filename + DateTime.Now.ToString("yymmssfff") + extension;//timestamp is appended to ensure unique file names
+            string path = Path.Combine(wwwRootPath + "/Images/", filename);//place tutaeka images 
+                                                                           //we upload file now to foldder...
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await product.ImageFile.CopyToAsync(fileStream);
+            }
+           
+            var imagelocation = "https://localhost:7093/Images/" + filename;
+
+            product.Image = imagelocation;
+            _context.Add(product);
             await _context.SaveChangesAsync();
-            TempData["success"] = ProductName +"added successfully";
+            TempData["success"] = product.ProductName + "added successfully";
             return RedirectToAction("Index");
             
               

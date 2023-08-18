@@ -1,0 +1,39 @@
+﻿@model IEnumerable<LadyLuxe.Models.Domain.Cart>
+
+    
+
+<h1>My Shoping Bag( @Model.Count() )</h1>
+<h5 style="color:gray">All Items in your cart</h5>
+
+@if (Model.Count() != 0)
+{
+    foreach(var item in Model)
+    {
+        <div style="margin-top:24px; background-color:white; box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
+  border-color: rgba(162, 179, 207, 0.2) " class="row">
+            <div class="col-2">
+                <img src="@item.ImageURL" style="border-radius:8px; height:100px;width:auto;" class="img-fluid">
+
+            </div>
+            <div class="col-10">
+                <div> @item.ProductName</div>
+                <div>KES @item.price.ToString("#,##0.00")</div>
+                   <div>Items: @item.Quantity</div>
+            </div>
+        </div>
+    }
+  
+        
+
+
+    }
+else
+{
+    <div style="text-align:center">
+        <img src="~/Gif/empty-box-animation.gif" style="max-height:200px;max-width:200px" class="img-fluid" />
+        <div class="alert alert-danger">
+            Opps!..Your Cart is Empty.
+        </div>
+
+    </div>
+}
